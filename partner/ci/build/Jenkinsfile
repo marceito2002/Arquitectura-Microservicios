@@ -1,201 +1,156 @@
 def source = env.TAG_NAME ? env.TAG_NAME : env.BRANCH_NAME
 
-def scopeMap  = [
-        "buildGoal"   : "deploy",
-        "profile" : "preprod",
-        "deployGoal" :"install",
-        "rev"    : source,
-	"deploy" : "false"
-]
 
-switch (source) {
-    case "master":
-        scopeMap.put("profile", "preprod")
-        scopeMap.put("version", "master-SNAPSHOT")
-		scopeMap.put("deploy", "true")
-        break
-    case ~/\d*\.\d*\.\d*/:
-        scopeMap.put("profile", "preprod")
-        scopeMap.put("version", "$source")
-		scopeMap.put("deploy", "true")
-        break
-    case ~/feature\/.*/:
-        scopeMap.put("profile", "preprod")
-        def array = source.toString().split('/')
-        if (array.length > 1) {
-            scopeMap.put("version", "${array[1]}-SNAPSHOT")
-        }
 
-        break
-    case ~/hotfix\/.*/:
-        scopeMap.put("profile", "preprod")
-        def array = source.toString().split('/')
-        if (array.length > 1) {
-            scopeMap.put("version", "${array[1]}-SNAPSHOT")
-        }
-        break
-    case ~/bugfix\/.*/:
-        scopeMap.put("profile", "preprod")
-        def array = source.toString().split('/')
-        if (array.length > 1) {
-            scopeMap.put("version", "${array[1]}-SNAPSHOT")
-        }
-        break
-    default:
-        echo "Nothing to do"
+def deployOpenShift(env) { 
+  	connectOpenShift(env)            	                       
+	script {                
+    	try{                           		    
+        	deployApp()
+        	
+    	}catch (Exception e) {
+    		deployImage() 
+    		
+    	}finally{
+    		updateEnvironment(env)                	    
+    	}
+    }                
 }
 
-import com.buongiorno.jenkinsci.plugins.delivery.*;
 
-currentBuild.displayName = "#${currentBuild.number}: "+ scopeMap.get('buildGoal')+"&"+scopeMap.get('deployGoal')+" - "+scopeMap.get('profile')+" - "+ scopeMap.get('rev')
+def connectOpenShift(env) { 		
+	if (env==ENVIRONMET_PRE){
+		echo "DEPLOYING in PRE..."
+		sh "oc login ${OPENSHIFT_ENPOINT_PRE} --token=${OPENSHIFT_TOKEN_PRE}"                
+		sh "oc project $OPENSHIFT_PROJECT_PRE"	    
+	}
+	else{
+		echo "DEPLOYING in PRO..."
+		sh "oc login ${OPENSHIFT_ENPOINT_PRO} --token=${OPENSHIFT_TOKEN_PRO}"                
+		sh "oc project $OPENSHIFT_PROJECT_PRO"	    
+	}     
+}
+
+
+def deployApp() { 
+	sh "oc new-app aherreros/microservicesdocomo:${artifactID}-${artifactVersion} --name ${artifactID}"
+	sh "oc expose svc/${artifactID} --port=8080"       
+}
+
+
+def deployImage() { 	
+	sh "oc import-image ${artifactID}:${artifactID}-${artifactVersion} --from aherreros/microservicesdocomo:${artifactID}-${artifactVersion}"     
+}
+
+def updateEnvironment(env) {
+	sh "oc set env dc/${artifactID} CONFIG_SERVER_ENDPOINT=http://configserver:8080"
+	sh "oc set env dc/${artifactID} SPRING_PROFILES_ACTIVE=openshift"  	     
+}
+
 
 pipeline {
     agent any
+
     tools {
         maven 'Maven 3.5.0'
         jdk 'jdk 8u71'     
-        oc 'oc3'       
+        oc 'oc3'
     }
-        
+                    
     environment{
-
-		DOCKER_REPOSITORY= "aherreros/microservicesdocomo"
-		DOCKER_USER="alfonso.herreros"
-		DOCKER_PASS="pepito"
-
-		OPENSHIFT_PROJECT = "prueba"
-		OPENSHIFT_TOKEN="1GBRtUh37CLj2uWCSoyGKV3YQM-3os7ZZOvbsIjheMc"
-		OPENSHIFT_ENPOINT="https://okd-milrc1.dodi.io:8443"
 		
-        // ****************************** Modify the job names for different projects ********************     
-        buildJob = "/FraudWall/fraudwall-api_arq"        
-        //deployJob = "/Data-Intelligence/data-intelligence-genius-cat-flume-deploy"
-        // ****************************** Modify the job names for different projects ********************
+    	ENVIRONMET_PRE ="PRO"				
+		OPENSHIFT_PROJECT_PRE = "prueba"
+		OPENSHIFT_TOKEN_PRE="l7aP8WJIx0nuFHMX2fM-6eVVXXPNsNlSC4MRQ3xGasM"
+		OPENSHIFT_ENPOINT_PRE="https://okd-milrc1.dodi.io:8443"
 
-        myBuildGoal = scopeMap.get("buildGoal")
-        myProfile = scopeMap.get("profile")
-        myRev = scopeMap.get("rev")        
-        myVersion = scopeMap.get("version")
-		shouldDeploy = scopeMap.get("deploy")
+    	ENVIRONMET_PRO ="PRE"		
+		OPENSHIFT_PROJECT_PRO = "prueba"
+		OPENSHIFT_TOKEN_PRO="l7aP8WJIx0nuFHMX2fM-6eVVXXPNsNlSC4MRQ3xGasM"
+		OPENSHIFT_ENPOINT_PRO="https://okd-milrc1.dodi.io:8443"
 
+		FILE_COMPOSE_CONSUMER = "./ci/local/docker-compose-consumer.yml"
+		FILE_COMPOSE = "./ci/local/docker-compose.yml"
+		
+		
+		artifactID = readMavenPom().getArtifactId()
+    	artifactVersion = readMavenPom().getVersion()
     }
-
-
-
 
     options {
         disableConcurrentBuilds()
-        buildDiscarder(logRotator(numToKeepStr: '3', artifactNumToKeepStr: '3'))
+        buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
+         timeout(time: 1, unit: 'HOURS') 
     }
 
-
-
-
     stages {
-
-        stage('Docker clean') {
-            steps {
-                echo 'Docker artifact....'
-               // sh 'docker rmi $(docker images -q -f "dangling=true")'
-                sh 'docker images'
-            }
-        }   
-      
+        
         stage('Prepare') {
             steps {
                 echo 'levantando consumers....'
-                sh 'docker-compose -f ./ci/local/docker-compose-consumer.yml up -d'
-                
-            }
-        }           
-       
-        
-       stage('Build') {
-            steps {
-                echo 'Building artifact....'
-                echo "Goal: $env.myBuildGoal and $env.myDeployGoal Revision $env.myRev Version: $env.myVersion"
-                sh 'mvn -B -DskipTests -Ddockerfile.skip=true clean package'
+                sh 'docker-compose -f ${FILE_COMPOSE_CONSUMER} up -d'                
             }
         }
-
+           
+        stage('Build') {
+            steps {            
+            echo "DATOS DE ENTRADA....$source"                    	   				                                  
+                sh 'mvn -B -DskipTests -Ddockerfile.skip=true clean package'               
+            }
+        }
+                
         stage('Install') {
-            steps {
+            steps {         
                 echo 'Install artifact....'
-                echo "Goal: $env.myBuildGoal and $env.myDeployGoal Revision $env.myRev Version: $env.myVersion"
                 sh 'mvn -B clean install -DskipTests'                 
             }
         }
         
-        
         stage('Bring up consumer') {
             steps {
                 echo 'Bring up consumers....'
- 				sh 'docker-compose -f ./ci/local/docker-compose.yml up -d'
+ 				sh 'docker-compose -f ${FILE_COMPOSE} up -d'
                 
             }
-        }   
-                
+        }
+                   
         stage('Test') {
             steps {
                 echo 'Install artifact....'
-                echo "Goal: $env.myBuildGoal and $env.myDeployGoal Revision $env.myRev Version: $env.myVersion"
                 sh 'mvn -B clean install -Ddockerfile.skip=true'                 
             }
-        }               
-        //stage('Deploy') {
-        //    steps {
-        //        echo 'Deloying artifact....'
-        //        echo "Goal: $env.myBuildGoal and $env.myDeployGoal Revision $env.myRev Version: $env.myVersion"
-        //        sh 'mvn deploy  -DskipTests -Ddockerfile.skip=true'                 
-        //    }
-        //}          
-
-        stage('Deploy') {
-            steps {
-            	sh "docker images"
-            	
+        }   
+                               
+        stage('Deploy nexus') {
+            steps {            	
                 echo 'Deloying artifact....'
-                echo "Goal: $env.myBuildGoal and $env.myDeployGoal Revision $env.myRev Version: $env.myVersion"
-//		        sh 'mvn deploy -DskipTests -Ddockerfile.username=$DOCKER_USER -Ddockerfile.password=$DOCKER_PASS'                 
-                
+                //echo "mvn deploy -DskipTests"// -Ddockerfile.username=$DOCKER_USER -Ddockerfile.password=$DOCKER_PASS'   
+                //sh 'mvn deploy -DskipTests -Ddockerfile.username=aherreros -Ddockerfile.password=pepe'                 
             }                        
         }                  
 
-        stage('Deploy Openshift') {
-            steps {                           
-                //echo "oc import-image configserver:configserver-$env.myVersion --from $DOCKER_REPOSITORY:configserver-$env.myVersion"                
-                echo 'Deloying in openshift....'
-                 
-                sh "oc login ${OPENSHIFT_ENPOINT} --token=${OPENSHIFT_TOKEN}"                
-                sh "oc project $OPENSHIFT_PROJECT"                                
-                sh "oc new-app aherreros/microservicesdocomo:partner-0.0.1-SNAPSHOT --name partner"
-                           
-                
-//                echo "oc import-image configserver:configserver-$env.myVersion --from $DOCKER_REPOSITORY:configserver-$env.myVersion"                
-//                sh 'mvn deploy -DskipTests -Ddockerfile.username=$DOCKER_USER -Ddockerfile.password=$DOCKER_PASS'                 
-                //sh 'mvn deploy -DskipTests'                
-            }                        
-        }     
-                                     
-        stage('configuration environment Openshift') {
-            steps {
-
-           	sh "oc set env dc/partner CONFIG_SERVER_ENDPOINT=http://configserver:8080" 
-			sh "oc set env dc/partner SPRING_PROFILES_ACTIVE=openshift"
-			sh "oc expose svc/partner" 
-                 
+        stage('Deploy Openshift Preproduction') {                
+            when { branch 'develop' }            
+            steps {   	
+                deployOpenShift(ENVIRONMET_PRE)                                                         
             }          
         }  
-                
+        
+        stage('Deploy Openshift Production') {
+            when { branch 'master'}
+			// DESCOMENTAR EN JENKINS. Lanzar cuando se crea un tg en master DOCOMO when { allOf { branch 'master'; buildingTag } }
+			//Tambien podemos usar un patron para dsplegar una vesón en pro
+			//when { tag "release-*" }.            
+                  
+            steps {            		
+                deployOpenShift(ENVIRONMET_PRO)                                                                     
+            }          
+        }                          
+
     }
     post {
         always {
-            script {           
-                echo 'stoping consumers....'
-                sh 'docker-compose -f ./ci/local/docker-compose.yml down'
- 				echo 'stoping producers....'
- 				sh 'docker-compose -f ./ci/local/docker-compose-consumer.yml down'   
- 				
+            script {
                 currentBuild.result = currentBuild.result ?: 'SUCCESS'
             }
         }
