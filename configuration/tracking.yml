@@ -1,0 +1,139 @@
+# HTTP Server
+server:  
+  port: 8080   # HTTP port
+
+spring:  
+  application:    
+    name: tracking
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE}    
+    
+logging:
+  file: logs/${spring.application.name}.log
+  pattern:
+    console: "%d %-5level %logger{5} %M : %msg%n"
+    file: "%d %-5level %logger{5} %M : %msg%n"
+  level:
+    com.netflix.discovery: 'OFF'
+    org.springframework.cloud: 'INFO'
+    org.springframework.web: 'INFO'
+    com.docomo.fraudwall: 'INFO' 
+    org.springframework.kafka: 'INFO'
+          
+
+endpoints:
+  health:
+    sensitive: false
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+
+msg:
+  partnerNameNoExist: Error to generating session, then partner name not exist. 
+  ssesionSuccess: Session generated Successfully
+  sessionOrPartnerNoExist: Session/partner Name not exist
+  tokenOrPartnerNoExist: Session/partner Name not exist
+  tokenSuccess: Session generated Successfully
+  sessionBadPartnerName: There are some partned with the same name
+  msgDataInvalid: Date format not valid. Example. 20171216 10:20\:34\:653
+
+---
+spring:
+  profiles: local
+  data:
+    mongodb:            
+      host: localhost
+      port: 27017
+      database: fraudwall
+      
+
+kafka:   
+  bootstrap-servers: localhost:9092
+  topic: HDP_FW_TRACK        
+  security: PLAINTEXT
+  useKeyTab: false
+  storeKey: false
+  clientIdConfig: fraudwall-spring
+  keyTabPlace: C:\\Docomo\\proyectos\\fraudwall\\hdp_b2bp_app.keytab
+  keyTabUser: hdp_b2bp_app@AD.DOCOMODIGITAL.COM  
+
+hbase:
+  zookeeper:
+    quorum: 127.0.0.1
+    clientPort: 2181
+  table:
+    name: testalf
+    nameSpace: fraudwall
+
+call:
+  partner: 
+    endpoint: http://localhost:2222/partner/getByName/
+
+--- 
+spring:
+  profiles: openshift
+  data:
+    mongodb:            
+      host: mongo
+v      port: 27017
+      database: fraudwall
+      username: alf
+      password: alf
+
+kafka:   
+  bootstrap-servers: 192.168.127.142:9092,192.168.127.143:9092,192.168.127.144:9092 
+  topic: HDP_FW_TRACK        
+  security: SASL_PLAINTEXT
+  useKeyTab: true
+  storeKey: false
+  clientIdConfig: test
+  keyTabPlace: /app/hdp_b2bp_app.keytab
+  keyTabUser: hdp_b2bp_app@AD.DOCOMODIGITAL.COM
+  kerberosServiceName: kafka
+
+hbase:
+  zookeeper:
+    quorum: 192.168.127.96,192.168.127.97,192.168.127.98
+    clientPort: 2181
+  kerberos:
+    name: kerberos
+    user: hdp_b2bp_app@AD.DOCOMODIGITAL.COM
+    principal: hbase/_HOST@AD.DOCOMODIGITAL.COM
+    keytab: /app/hdp_b2bp_app.keytab
+  table:
+    name: execution
+    nameSpace: fraudwall
+
+
+call:
+  partner: 
+    endpoint: http://partner:8080/partner/getByName/
+
+---
+spring:
+  profiles: docker
+  data:
+    mongodb:
+     host: mongodb	
+
+
+kafka:   
+  bootstrap-servers: kafka:9092 
+  topic: HDP_FW_TRACK        
+  security: PLAINTEXT
+  useKeyTab: false
+  storeKey: false
+  clientIdConfig: fraudwall-spring    
+
+hbase:
+  zookeeper:
+    quorum: 127.0.0.1
+    clientPort: 2181
+  table:
+    name: execution
+    nameSpace: fraudwall
+
+call:
+  partner: 
+    endpoint: http://partner:2222/partner/getByName/

@@ -1,0 +1,27 @@
+version: '2.1'
+
+services:
+  tracking:
+    image: "aherreros/microservicesdocomo:tracking-0.0.1-SNAPSHOT"
+    container_name: tracking
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      #SPRING_PROFILES_ACTIVE: ${CONFIG_SPRING_PROFILES_ACTIVE}
+      PORT_KAFKA_PRODUCER: 9092
+      CONFIG_SERVER_ENDPOINT: http://configserver:8888
+
+    #depends_on:      
+    #  - configserver
+     # - mongodb
+    #links:
+    #  - mongodb
+    #  - kafka
+    #  - configserver
+    networks:
+      - docomo.fraudwall
+    ports:
+      - "8080:8080"
+
+networks:
+  docomo.fraudwall:
+    driver: bridge

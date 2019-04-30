@@ -1,0 +1,45 @@
+server:  
+  port: ${PORT:8080} 
+      
+        
+spring:  
+  application:
+    name: configserver
+  cloud:
+    config:
+      server:
+        git:
+          uri: ${GIT_URI:https://github.com/marceito2002/configServerPruebas} #https://github.com/marceito2002/configServerPruebas #https://bitbucket.net-m.de/scm/frdwll/configuration.git         
+          username: ${GIT_USER} #alfonso.herreros
+          password: ${GIT_PASS}
+#  rabbitmq:
+#    host: rabbitmq
+#    port: 5672
+#    username: guest
+#    password: guest
+
+#local:
+#   server:
+#      port: 8080
+      
+  
+logging:
+  file: logs/${spring.application.name}.log
+  level:
+    com.netflix.discovery: 'OFF'
+    org.springframework.cloud: 'DEBUG'
+    com.docomo: 'DEBUG'
+    
+                   
+
+#spring:  
+#  application:
+#    
+#  profiles:
+#    active: native
+#  cloud:
+#    config:
+#      server:
+#        native:
+#          searchLocations: C:/Docomo/configuracionLocal                     
+  

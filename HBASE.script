@@ -1,0 +1,59 @@
+-Dspring-boot.run.profiles=local
+-Djava.security.auth.login.config=C:\\Docomo\\proyectos\\fraudwall\\jaas.conf
+-Dsun.security.krb5.debug=true
+
+
+1. Crear tabla
+ create 'fraudwall:testalf', 'sessionid', 'fraud'
+ create 'fraudwall:testalf', 'sessionid data', 'fraudwall data'
+ create 'fraudwall:testalf', 'sessionid data'
+ create 'fraudwall:testalf', 'cf1'
+ 
+ 
+ create_namespace 'fraudwall';   
+ create 'fraudwall:execution', 'cf1'
+ 
+2. insertar datos
+ put 'fraudwall:testalf', 'sessionid', 'sessionid:FWtX4R21554130162414', 'fraud:4'
+ put 'fraudwall:testalf', 'sessionid', 'sessionid:FWtX4R21554130162666', 'fraud:2'
+ 
+ put 'fraudwall:testalf','1','sessionid data:sessionid','FWtX4R21554130162414'
+ put 'fraudwall:testalf','1','fraudwall data:fraudid','level2'
+ put 'fraudwall:testalf','2','sessionid data:sessionid','FWtX4R21554130162666'
+ put 'fraudwall:testalf','2','fraudwall data:fraudid','level4'
+ 
+ 
+ put 'fraudwall:testalf','FWtX4R21554130162414','sessionid data:sessionid','{"fraudLevel":414,"fraudScore":12.2,"tags":["string"]}'
+ put 'fraudwall:testalf','FWtX4R21554130162666','sessionid data:sessionid','{"fraudLevel":666,"fraudScore":31.4,"tags":["string"]}'
+ put 'fraudwall:testalf','FWtX4R21554130162555','sessionid data:sessionid','{"fraudLevel":555,"fraudScore":43.1,"tags":["string"]}'
+ 
+ put 'fraudwall:testalf','FWtX4R21554130162555','cf1:json','{"fraudLevel":555,"fraudScore":43.1,"tags":["string"]}'
+ put 'fraudwall:testalf','FWtX4R21554130162666','cf1:json','{"fraudLevel":666,"fraudScore":31.4,"tags":["string"]}'
+ put 'fraudwall:testalf','FWtX4R21554130162555','cf1:json','{"fraudLevel":555,"fraudScore":43.1,"tags":["string"]}'
+ put 'fraudwall:testalf','FWtX4R21554130162414','cf1:json','{"fraudLevel":123,"fraudScore":4233.1,"tags":["string"]}'
+
+ 
+ 
+ put 'fraudwall:testalf','FWtX4R21554130162555','cf1:json','{"sessionId":"FWtX4R21554130162556","uiModel":"modelA","partnerName":"sakura_2","affiliate":"afff1","app":"www.app.com","country":"fr","ip":"1.2.3.4","mediaChannel":"google","merchant":"docomo","network":"3G","operator":"bouygues","partnerTrid":"123234nfufn23492349","purchaseFlow":"oneClick","service":"games","timestampUtc":"2019-04-03T07:43:13.215Z","ua":{"uaBrand":"Samsung","uaBrowser":"Chrome Mobile","uaBrowserVersion":"UNKNOWN","uaGroup":"ANDROID_PHONE","uaModel":"Android 7.0"},"userId":"TESTMSISDN","fraudInfo":{"fraudLevel":"2","fraudScore":"1.8","tags":["fast submit","many clicks"]}}'
+ put 'fraudwall:testalf','FWtX4R21554130162666','cf1:json','{"sessionId":"FWtX4R21554130162666","uiModel":"modelB","partnerName":"sakura_2","affiliate":"afff1","app":"www.app.com","country":"fr","ip":"1.2.3.4","mediaChannel":"google","merchant":"docomo","network":"3G","operator":"bouygues","partnerTrid":"123234nfufn23492349","purchaseFlow":"oneClick","service":"games","timestampUtc":"2019-04-03T07:43:13.215Z","ua":{"uaBrand":"Samsung","uaBrowser":"Chrome Mobile","uaBrowserVersion":"UNKNOWN","uaGroup":"ANDROID_PHONE","uaModel":"Android 7.0"},"userId":"TESTMSISDN","fraudInfo":{"fraudLevel":"2","fraudScore":"1.8","tags":["fast submit","many clicks"]}}'
+ put 'fraudwall:testalf','FWtX4R21554130162414','cf1:json','{"sessionId":"FWtX4R21554130162414","uiModel":"modelD","partnerName":"sakura_2","affiliate":"afff1","app":"www.app.com","country":"fr","ip":"1.2.3.4","mediaChannel":"google","merchant":"docomo","network":"3G","operator":"bouygues","partnerTrid":"123234nfufn23492349","purchaseFlow":"oneClick","service":"games","timestampUtc":"2019-04-03T07:43:13.215Z","ua":{"uaBrand":"Samsung","uaBrowser":"Chrome Mobile","uaBrowserVersion":"UNKNOWN","uaGroup":"ANDROID_PHONE","uaModel":"Android 7.0"},"userId":"TESTMSISDN","fraudInfo":{"fraudLevel":"2","fraudScore":"1.8","tags":["fast submit","many clicks"]}}' 
+ put 'fraudwall:testalf','FWkB6V81554910579894','cf1:json','{"sessionId":"FWkB6V81554910579894","uiModel":"modelD","partnerName":"sakura_2","affiliate":"afff1","app":"www.app.com","country":"fr","ip":"1.2.3.4","mediaChannel":"google","merchant":"docomo","network":"3G","operator":"bouygues","partnerTrid":"123234nfufn23492349","purchaseFlow":"oneClick","service":"games","timestampUtc":"2019-04-03T07:43:13.215Z","ua":{"uaBrand":"Samsung","uaBrowser":"Chrome Mobile","uaBrowserVersion":"UNKNOWN","uaGroup":"ANDROID_PHONE","uaModel":"Android 7.0"},"userId":"TESTMSISDN","fraudInfo":{"fraudLevel":"2","fraudScore":"1.8","tags":["fast submit","many clicks"]}}'  
+ put 'fraudwall:testalf','FWuO0jA1554911759128','cf1:json','{"sessionId":"FWuO0jA1554911759128","uiModel":"modelD","partnerName":"sakura_2","affiliate":"afff1","app":"www.app.com","country":"fr","ip":"1.2.3.4","mediaChannel":"google","merchant":"docomo","network":"3G","operator":"bouygues","partnerTrid":"123234nfufn23492349","purchaseFlow":"oneClick","service":"games","timestampUtc":"2019-04-03T07:43:13.215Z","ua":{"uaBrand":"Samsung","uaBrowser":"Chrome Mobile","uaBrowserVersion":"UNKNOWN","uaGroup":"ANDROID_PHONE","uaModel":"Android 7.0"},"userId":"TESTMSISDN","fraudInfo":{"fraudLevel":"2","fraudScore":"1.8","tags":["fast submit","many clicks"]}}'  
+ 
+ 
+3. Lista todos:
+ get 'fraudwall:testalf', 'sessionid'
+ get 'fraudwall:testalf', 'fraud'
+
+ get 'fraudwall:testalf', '1'
+ get 'fraudwall:testalf', 'FWtX4R21554130162555'
+
+ get 'fraudwall:testalf', '', {COLUMN => 'sessionid data:sessionid'}
+ get 'fraudwall:testalf', '3', {COLUMN => 'sessionid data:sessionid'}
+
+
+ get 'fraudwall:testalf', 'FWtX4R21554130162414', {COLUMN => 'sessionid data:sessionid'}
+ get 'fraudwall:testalf', 'FWtX4R21554130162666', {COLUMN => 'sessionid data:sessionid'}
+ get 'fraudwall:testalf', 'FWtX4R21554130162555', {COLUMN => 'sessionid data:sessionid'}
+
+ get 'fraudwall:testalf', 'FWuO0jA1554911759128'

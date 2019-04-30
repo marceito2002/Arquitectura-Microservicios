@@ -1,0 +1,8 @@
+
+docker-compose -f C:/Docomo/proyectos/fraudwall/configserver/ci/local/composer.yml -p global-utils up -d             
+docker build C:/Docomo/proyectos/fraudwall/configserver/ci/consumer  -t global-utils
+docker run -ti --rm --name global-utils  -v C:/Docomo/proyectos/fraudwall/configserver:/WORKSPACE -e WORKSPACE=/WORKSPACE --env-file C:/Docomo/proyectos/fraudwall/configserver/ci/local/consumer.env --network global-utils_default global-utils 
+
+
+
+C:/Docomo/proyectos/fraudwall/configserver/ci/local/composer.yml

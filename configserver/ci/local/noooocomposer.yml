@@ -1,0 +1,26 @@
+version: '2.1'
+
+
+services:
+  config-server:
+    image: "aherreros/microservicesdocomo:configserver-0.0.1-SNAPSHOT"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      HOSTNAME: "configserver"
+      JAVA_OPTS: -Xmx64m -Xss256k
+      SPRINGBOOT_OPTS: --spring.http.multipart.max-file-size=50MB --spring.http.multipart.max-request-size=50MB
+      LOG_PATH: /tmp/logs
+      GIT_URI: https://github.com/marceito2002/configServerPruebas
+      GIT_USERNAME: 
+      GIT_PASS: 
+
+    ports:
+      - "8888:8888"
+
+    networks:
+     - docomo.fraudwall
+    restart: always
+
+networks:
+  docomo.fraudwall:
+    driver: bridge

@@ -1,0 +1,32 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: 'true'
+  creationTimestamp: '2019-03-01T13:56:28Z'
+  labels:
+    app: configserverv1
+  name: configserverv1
+  namespace: ${PROYECT_NAME}
+  resourceVersion: '3862414261'
+  selfLink: /apis/route.openshift.io/v1/namespaces/${PROYECT_NAME}/routes/configserverv1
+  uid: cf6bc160-3c29-11e9-a622-1250f17a13c8
+spec:
+  host: configserverv1-prueba2.1d35.starter-us-east-1.openshiftapps.com
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: Service
+    name: configserverv1
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+    - conditions:
+        - lastTransitionTime: '2019-03-01T13:56:28Z'
+          status: 'True'
+          type: Admitted
+      host: configserverv1-prueba2.1d35.starter-us-east-1.openshiftapps.com
+      routerCanonicalHostname: elb.1d35.starter-us-east-1.openshiftapps.com
+      routerName: router
+      wildcardPolicy: None

@@ -1,0 +1,130 @@
+ def source = env.TAG_NAME ? env.TAG_NAME : env.BRANCH_NAME
+
+def scopeMap  = [
+        "buildGoal"   : "deploy",
+        "profile" : "preprod",
+        "deployGoal" :"install",
+        "rev"    : source,
+	"deploy" : "false"
+]
+
+switch (source) {
+    case "master":
+        scopeMap.put("profile", "preprod")
+        scopeMap.put("version", "master-SNAPSHOT")
+		scopeMap.put("deploy", "true")
+        break
+    case ~/\d*\.\d*\.\d*/:
+        scopeMap.put("profile", "preprod")
+        scopeMap.put("version", "$source")
+		scopeMap.put("deploy", "true")
+        break
+    case ~/feature\/.*/:
+        scopeMap.put("profile", "preprod")
+        def array = source.toString().split('/')
+        if (array.length > 1) {
+            scopeMap.put("version", "${array[1]}-SNAPSHOT")
+        }
+
+        break
+    case ~/hotfix\/.*/:
+        scopeMap.put("profile", "preprod")
+        def array = source.toString().split('/')
+        if (array.length > 1) {
+            scopeMap.put("version", "${array[1]}-SNAPSHOT")
+        }
+        break
+    case ~/bugfix\/.*/:
+        scopeMap.put("profile", "preprod")
+        def array = source.toString().split('/')
+        if (array.length > 1) {
+            scopeMap.put("version", "${array[1]}-SNAPSHOT")
+        }
+        break
+    default:
+        echo "Nothing to do"
+}
+
+import com.buongiorno.jenkinsci.plugins.delivery.*;
+
+currentBuild.displayName = "#${currentBuild.number}: "+ scopeMap.get('buildGoal')+"&"+scopeMap.get('deployGoal')+" - "+scopeMap.get('profile')+" - "+ scopeMap.get('rev')
+
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven 3.5.0'
+        jdk 'jdk 8u71'
+    }
+        
+    environment{
+
+
+
+        // ****************************** Modify the job names for different projects ********************     
+        buildJob = "/FraudWall/fraudwall-api_arq"        
+        //deployJob = "/Data-Intelligence/data-intelligence-genius-cat-flume-deploy"
+        // ****************************** Modify the job names for different projects ********************
+
+        myBuildGoal = scopeMap.get("buildGoal")
+
+        
+        //myDeployGoal = scopeMap.get("deployGoal")
+        myProfile = scopeMap.get("profile")
+    
+    
+        myRev = scopeMap.get("rev")        
+
+        
+        myVersion = scopeMap.get("version")
+
+        
+		shouldDeploy = scopeMap.get("deploy")
+
+    }
+
+
+
+
+    options {
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '3', artifactNumToKeepStr: '3'))
+    }
+
+
+
+
+    stages {
+
+        stage('Build') {
+            steps {
+                echo 'Building artifact....'
+                echo "Goal: $env.myBuildGoal and $env.myDeployGoal Revision $env.myRev Version: $env.myVersion"
+                sh 'mvn -B -DskipTests clean package'
+            }
+        }
+
+        stage('Install') {
+            steps {
+                echo 'Install artifact....'
+                echo "Goal: $env.myBuildGoal and $env.myDeployGoal Revision $env.myRev Version: $env.myVersion"
+                sh 'mvn clean install'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deloying artifact....'
+                echo "Goal: $env.myBuildGoal and $env.myDeployGoal Revision $env.myRev Version: $env.myVersion"
+                //sh 'mvn deploy'                 
+            }
+        }                        
+
+    }
+    post {
+        always {
+            script {
+                currentBuild.result = currentBuild.result ?: 'SUCCESS'
+            }
+        }
+    }
+}

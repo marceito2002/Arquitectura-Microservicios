@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftWebConsole
+  creationTimestamp: '2019-03-01T11:49:03Z'
+  labels:
+    app: trackingv3-0
+  name: trackingv3-0
+  namespace: prueba2
+  resourceVersion: '3862247491'
+  selfLink: /api/v1/namespaces/prueba2/services/trackingv3-0
+  uid: 02c2563d-3c18-11e9-87e7-12d641ec7610
+spec:
+  clusterIP: 172.30.120.138
+  ports:
+    - name: 8000-tcp
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    deploymentconfig: trackingv3-0
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

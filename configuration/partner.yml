@@ -1,0 +1,69 @@
+# HTTP Server
+server:  
+  port: 2222   # HTTP port
+
+spring:  
+  application:    
+    name: partner
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE}    
+    
+logging:
+  file: logs/${spring.application.name}.log
+  pattern:
+    console: "%d %-5level %logger{5} %M : %msg%n"
+    file: "%d %-5level %logger{5} %M : %msg%n"
+  level:
+    com.netflix.discovery: 'OFF'
+    org.springframework.cloud: 'INFO'
+    org.springframework.web: 'INFO'
+    com.docomo.fraudwall: 'INFO' 
+    org.springframework.kafka: 'INFO'
+          
+
+endpoints:
+  health:
+    sensitive: false
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+
+msg:
+
+---
+spring:
+  profiles: local
+  data:
+    mongodb:     
+      database: fraudwall	
+      host: localhost
+      port: 27017
+      
+--- 
+spring:
+  profiles: openshift
+  data:
+    mongodb:            
+      host: mongo
+      port: 27017
+      database: fraudwall
+      username: alf
+      password: alf
+
+
+---
+spring:
+  profiles: docker
+  data:
+    mongodb:
+     host: mongodb	
+      #host: mongodb
+      #port: 27017
+      #database: fraudwall
+    #mongodb:            
+    #  host: mid1-s076stgmng-1.buongiorno.com
+     # port: 27017
+      #database: cat
+      #user: cat_user
+      #password: mf15mdj	  
