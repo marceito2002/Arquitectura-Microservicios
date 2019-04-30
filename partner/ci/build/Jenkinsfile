@@ -69,12 +69,13 @@ pipeline {
 		OPENSHIFT_TOKEN_PRO="l7aP8WJIx0nuFHMX2fM-6eVVXXPNsNlSC4MRQ3xGasM"
 		OPENSHIFT_ENPOINT_PRO="https://okd-milrc1.dodi.io:8443"
 
-		FILE_COMPOSE_CONSUMER = "./partnert/ci/local/docker-compose-consumer.yml"
-		FILE_COMPOSE = "./partnert/ci/local/docker-compose.yml"
+		FILE_COMPOSE_CONSUMER = "./partner/ci/local/docker-compose-consumer.yml"
+		FILE_COMPOSE = "./partner/ci/local/docker-compose.yml"
 		
+		def pom =readMavenPom file: './partner/pom.xml'
 		
-		artifactID = readMavenPom().getArtifactId()
-    	artifactVersion = readMavenPom().getVersion()
+		artifactID = pom.getArtifactId()
+    	artifactVersion = pom.getVersion()
     }
 
     options {
