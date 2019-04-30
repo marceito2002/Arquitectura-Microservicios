@@ -73,9 +73,10 @@ pipeline {
 		OPENSHIFT_TOKEN_PRO="l7aP8WJIx0nuFHMX2fM-6eVVXXPNsNlSC4MRQ3xGasM"
 		OPENSHIFT_ENPOINT_PRO="https://okd-milrc1.dodi.io:8443"
 
-
-		artifactID = readMavenPom().getArtifactId()
-    	artifactVersion = readMavenPom().getVersion()
+		def pom =readMavenPom file: './configserver/pom.xml'
+		
+		artifactID = pom.getArtifactId()
+    	artifactVersion = pom.getVersion()
     }
 
     options {
