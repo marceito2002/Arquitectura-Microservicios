@@ -69,8 +69,8 @@ pipeline {
 		OPENSHIFT_TOKEN_PRO="l7aP8WJIx0nuFHMX2fM-6eVVXXPNsNlSC4MRQ3xGasM"
 		OPENSHIFT_ENPOINT_PRO="https://okd-milrc1.dodi.io:8443"
 
-		FILE_COMPOSE_CONSUMER = "./ci/local/docker-compose-consumer.yml"
-		FILE_COMPOSE = "./ci/local/docker-compose.yml"
+		FILE_COMPOSE_CONSUMER = "./partnert/ci/local/docker-compose-consumer.yml"
+		FILE_COMPOSE = "./partnert/ci/local/docker-compose.yml"
 		
 		
 		artifactID = readMavenPom().getArtifactId()

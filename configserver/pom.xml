@@ -6,6 +6,7 @@
 	<name>configserver</name>
 	<groupId>com.docomo.fraudwall</groupId>
 	<artifactId>configserver</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<url>http://maven.apache.org</url>

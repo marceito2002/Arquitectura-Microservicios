@@ -6,6 +6,7 @@
 	<groupId>com.docomo.fraudwall</groupId>
 	<artifactId>tracking</artifactId>
 	<packaging>jar</packaging>
+	<version>0.0.1-SNAPSHOT</version>
 
 	<name>tracking</name>
 	<url>http://maven.apache.org</url>
