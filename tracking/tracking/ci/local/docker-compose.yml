@@ -2,7 +2,8 @@ version: '2.1'
 
 services:
   tracking:
-    image: "repo-04.dodi.io:5000/tracking:0.0.1-SNAPSHOT"
+    #image: "repo-04.dodi.io:5000/tracking:0.0.1-SNAPSHOT"
+    image: "aherreros/microservicesdocomo:tracking-0.0.1-SNAPSHOT"    
     container_name: tracking
     environment:
       SPRING_PROFILES_ACTIVE: docker
@@ -18,7 +19,7 @@ services:
     networks:
       - docomo.fraudwall
     ports:
-      - "8080:8080"
+      - "8989:8080"
 
 networks:
   docomo.fraudwall:
