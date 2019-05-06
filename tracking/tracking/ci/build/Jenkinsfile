@@ -58,7 +58,6 @@ pipeline {
     }
                     
     environment{
-		environment
     	ENVIRONMENT_PRE ="PRO"				
 		OPENSHIFT_PROJECT_PRE = "prueba"
 		OPENSHIFT_TOKEN_PRE="VeHNgcHcAd8P5fm8lz6pWMQMLn-_iILIANhMeSVJawQ"
