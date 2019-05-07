@@ -60,13 +60,14 @@ pipeline {
     environment{
 		
     	ENVIRONMET_PRE ="PRO"				
-		OPENSHIFT_PROJECT_PRE = "prueba"
-		OPENSHIFT_TOKEN_PRE="VeHNgcHcAd8P5fm8lz6pWMQMLn-_iILIANhMeSVJawQ"
+		OPENSHIFT_PROJECT_PRE = "fraudwall"
+		OPENSHIFT_TOKEN_PRE="FtT7l6GIw9OE1AUVajIwkAJZMofMZZ3XGJGDKtHDpKM"
+		
 		OPENSHIFT_ENPOINT_PRE="https://okd-milrc1.dodi.io:8443"
 
     	ENVIRONMET_PRO ="PRE"		
-		OPENSHIFT_PROJECT_PRO = "prueba"
-		OPENSHIFT_TOKEN_PRO="VeHNgcHcAd8P5fm8lz6pWMQMLn-_iILIANhMeSVJawQ"
+		OPENSHIFT_PROJECT_PRO = "fraudwall"
+		OPENSHIFT_TOKEN_PRO="FtT7l6GIw9OE1AUVajIwkAJZMofMZZ3XGJGDKtHDpKM"
 		OPENSHIFT_ENPOINT_PRO="https://okd-milrc1.dodi.io:8443"
 
 		FILE_COMPOSE_CONSUMER = "./partner/ci/local/docker-compose-consumer.yml"
