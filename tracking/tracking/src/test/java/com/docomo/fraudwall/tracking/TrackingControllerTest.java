@@ -56,12 +56,6 @@ public class TrackingControllerTest {
 	private TrackingController controller;
 
 	@MockBean
-	private ISessionRepository repositorySessionMck;
-
-	@MockBean
-	private TrackingBusiness bussinesTrackingMck;
-
-	@MockBean
 	private KafkaBusiness kafkaBusinessMck;
 
 	@Autowired
