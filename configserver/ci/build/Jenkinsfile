@@ -19,7 +19,7 @@ def deployOpenShift(env) {
 
 
 def connectOpenShift(env) { 		
-	if (env==ENVIRONMET_PRE){
+	if (env==ENVIRONMENT_PRE){
 		echo "DEPLOYING in PRE..."
 		sh "oc login ${OPENSHIFT_ENPOINT_PRE} --token=${OPENSHIFT_TOKEN_PRE}"                
 		sh "oc project $OPENSHIFT_PROJECT_PRE"	    
