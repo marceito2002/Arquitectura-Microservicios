@@ -119,7 +119,7 @@ pipeline {
         stage('Deploy Openshift Preproduction') {                
             when { branch 'develop' }            
             steps {   	
-                deployOpenShift(ENVIRONMET_PRE)                                                         
+                deployOpenShift(ENVIRONMENT_PRE)                                                         
             }          
         }  
         
@@ -130,7 +130,7 @@ pipeline {
 			//when { tag "release-*" }.            
                   
             steps {            		
-                deployOpenShift(ENVIRONMET_PRO)                                                                     
+                deployOpenShift(ENVIRONMENT_PRO)                                                                     
             }          
         }                          
 
