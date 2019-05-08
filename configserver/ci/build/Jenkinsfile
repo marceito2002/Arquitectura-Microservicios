@@ -63,15 +63,15 @@ pipeline {
                     
     environment{
 		
-    	ENVIRONMET_PRE ="PRO"				
-		OPENSHIFT_PROJECT_PRE = "fraudwall"
-		OPENSHIFT_TOKEN_PRE="FtT7l6GIw9OE1AUVajIwkAJZMofMZZ3XGJGDKtHDpKM"
-		OPENSHIFT_ENPOINT_PRE="https://okd-milrc1.dodi.io:8443"
+    	ENVIRONMENT_PRE ="PRO"				
+		OPENSHIFT_PROJECT_PRE = "prueba"
+		OPENSHIFT_TOKEN_PRE="yd58W913GbILTe0q2D7fLSzVu2nMBLOF_iZFgZWEUNE"
+		OPENSHIFT_ENPOINT_PRE="https://api.starter-us-west-2.openshift.com"
 
-    	ENVIRONMET_PRO ="PRE"		
-		OPENSHIFT_PROJECT_PRO = "fraudwall"
-		OPENSHIFT_TOKEN_PRO="FtT7l6GIw9OE1AUVajIwkAJZMofMZZ3XGJGDKtHDpKM"
-		OPENSHIFT_ENPOINT_PRO="https://okd-milrc1.dodi.io:8443"
+    	ENVIRONMENT_PRO ="PRE"		
+		OPENSHIFT_PROJECT_PRO = "prueba"
+		OPENSHIFT_TOKEN_PRO="yd58W913GbILTe0q2D7fLSzVu2nMBLOF_iZFgZWEUNE"
+		OPENSHIFT_ENPOINT_PRO="https://api.starter-us-west-2.openshift.com"
 
 		def pom =readMavenPom file: './configserver/pom.xml'
 		
