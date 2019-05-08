@@ -34,7 +34,6 @@ def connectOpenShift(env) {
 
 def deployApp() { 
 	sh "oc new-app aherreros/microservicesdocomo:${artifactID}-${artifactVersion} --name ${artifactID}"
-	sh "oc expose svc/${artifactID} --port=8080"       
 }
 
 
