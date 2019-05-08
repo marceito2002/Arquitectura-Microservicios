@@ -63,9 +63,6 @@ pipeline {
 		OPENSHIFT_PROJECT_PRE = "prueba"
 		OPENSHIFT_TOKEN_PRE="yd58W913GbILTe0q2D7fLSzVu2nMBLOF_iZFgZWEUNE"
 		OPENSHIFT_ENPOINT_PRE="https://api.starter-us-west-2.openshift.com"
-oc login https://api.starter-us-west-2.openshift.com --token=yd58W913GbILTe0q2D7fLSzVu2nMBLOF_iZFgZWEUNE
-
-
 
     	ENVIRONMENT_PRO ="PRE"		
 		OPENSHIFT_PROJECT_PRO = "prueba"
