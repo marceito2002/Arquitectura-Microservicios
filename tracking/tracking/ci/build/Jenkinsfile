@@ -60,12 +60,12 @@ pipeline {
     environment{		
 		
     	ENVIRONMENT_PRE ="PRO"				
-		OPENSHIFT_PROJECT_PRE = "prueba"
+		OPENSHIFT_PROJECT_PRE = "fraudwall"
 		OPENSHIFT_TOKEN_PRE="yd58W913GbILTe0q2D7fLSzVu2nMBLOF_iZFgZWEUNE"
 		OPENSHIFT_ENPOINT_PRE="https://api.starter-us-west-2.openshift.com"
 
     	ENVIRONMENT_PRO ="PRE"		
-		OPENSHIFT_PROJECT_PRO = "prueba"
+		OPENSHIFT_PROJECT_PRO = "fraudwall"
 		OPENSHIFT_TOKEN_PRO="yd58W913GbILTe0q2D7fLSzVu2nMBLOF_iZFgZWEUNE"
 		OPENSHIFT_ENPOINT_PRO="https://api.starter-us-west-2.openshift.com"
 
