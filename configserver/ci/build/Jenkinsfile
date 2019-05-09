@@ -63,13 +63,13 @@ pipeline {
     environment{
 		
     	ENVIRONMENT_PRE ="PRO"				
-		OPENSHIFT_PROJECT_PRE = "microservicefraudwall"
-		OPENSHIFT_TOKEN_PRE="4GDx4kssyKQJPiC52ijL7yEru3a1XRX31tKRavDj2HU"
+		OPENSHIFT_PROJECT_PRE = "fraudwallbelen"
+		OPENSHIFT_TOKEN_PRE="g9nl7wYqyk86Y-Vs7n0rBNjnZ099b7RMCGH57jM0rpg"
 		OPENSHIFT_ENPOINT_PRE="https://okd-milrc1.dodi.io:8443"
 
     	ENVIRONMENT_PRO ="PRE"		
-		OPENSHIFT_PROJECT_PRO = "microservicefraudwall"
-		OPENSHIFT_TOKEN_PRO="4GDx4kssyKQJPiC52ijL7yEru3a1XRX31tKRavDj2HU"
+		OPENSHIFT_PROJECT_PRO = "fraudwallbelen"
+		OPENSHIFT_TOKEN_PRO="g9nl7wYqyk86Y-Vs7n0rBNjnZ099b7RMCGH57jM0rpg"
 		OPENSHIFT_ENPOINT_PRO="https://okd-milrc1.dodi.io:8443"
 
 		def pom =readMavenPom file: './configserver/pom.xml'
