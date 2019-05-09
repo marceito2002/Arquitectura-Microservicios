@@ -33,17 +33,18 @@ def connectOpenShift(env) {
 
 
 def deployApp() { 
-	sh "oc new-app aherreros/microservicesdocomo:${artifactID}-${artifactVersion} --name ${artifactID}"
+	//sh "oc new-app aherreros/microservicesdocomo:${artifactID}-${artifactVersion} --name ${artifactID}"
+	sh "oc new-app ${DOCKER_REPOSITORY}/${artifactID}:${artifactVersion} --name ${artifactID}"
+	       
 }
 
 
 def deployImage() { 	
-	sh "oc import-image ${artifactID}:${artifactID}-${artifactVersion} --from aherreros/microservicesdocomo:${artifactID}-${artifactVersion}"     
+	//sh "oc import-image ${artifactID}:${artifactID}-${artifactVersion} --from aherreros/microservicesdocomo:${artifactID}-${artifactVersion}"
+	sh "oc import-image ${artifactID}:${artifactID}-${artifactVersion} --from ${DOCKER_REPOSITORY}/${artifactID}:${artifactVersion}"
 }
 
 def updateEnvironment(env) {
-	i = "prueba" 	
-	echo "ESTO ES UNA PRUEBA $i"
 	sh "oc set env dc/${artifactID} GIT_URI=https://github.com/marceito2002/configServerPruebas.git"
 	sh "oc set env dc/${artifactID} GIT_PASS="
 	sh "oc set env dc/${artifactID} GIT_USER="
@@ -62,17 +63,21 @@ pipeline {
                     
     environment{
 		
-    	ENVIRONMENT_PRE ="PRO"				
+    	ENVIRONMENT_PRE ="PRE"				
 		OPENSHIFT_PROJECT_PRE = "fraudwallbelen"
 		OPENSHIFT_TOKEN_PRE="g9nl7wYqyk86Y-Vs7n0rBNjnZ099b7RMCGH57jM0rpg"
 		OPENSHIFT_ENPOINT_PRE="https://okd-milrc1.dodi.io:8443"
-
-    	ENVIRONMENT_PRO ="PRE"		
+		
+    	ENVIRONMENT_PRO ="PRO"		
 		OPENSHIFT_PROJECT_PRO = "fraudwallbelen"
 		OPENSHIFT_TOKEN_PRO="g9nl7wYqyk86Y-Vs7n0rBNjnZ099b7RMCGH57jM0rpg"
 		OPENSHIFT_ENPOINT_PRO="https://okd-milrc1.dodi.io:8443"
 
-		def pom =readMavenPom file: './configserver/pom.xml'
+		DOCKER_USER = "UserDocomoDockerNexus"
+		DOCKER_PASS = "PassDocomoDockerNexus"
+		DOCKER_REPOSITORY = "repo-04.dodi.io:5000"
+
+		def pom = readMavenPom file: './configserver/pom.xml'
 		
 		artifactID = pom.getArtifactId()
     	artifactVersion = pom.getVersion()
@@ -81,7 +86,7 @@ pipeline {
     options {
         disableConcurrentBuilds()
         buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
-         timeout(time: 1, unit: 'HOURS') 
+        timeout(time: 1, unit: 'HOURS') 
     }
 
     stages {
@@ -110,8 +115,7 @@ pipeline {
         stage('Deploy nexus') {
             steps {            	
                 echo 'Deloying artifact....'
-                //echo "mvn deploy -DskipTests"// -Ddockerfile.username=$DOCKER_USER -Ddockerfile.password=$DOCKER_PASS'   
-                //sh 'mvn deploy -DskipTests -Ddockerfile.username=aherreros -Ddockerfile.password=pepe'                 
+                sh "mvn deploy -DskipTests -Ddockerfile.username=$DOCKER_USER -Ddockerfile.password=$DOCKER_PASS"                                
             }                        
         }                  
 
@@ -126,8 +130,7 @@ pipeline {
             when { branch 'master'}
 			// DESCOMENTAR EN JENKINS. Lanzar cuando se crea un tg en master DOCOMO when { allOf { branch 'master'; buildingTag } }
 			//Tambien podemos usar un patron para dsplegar una vesón en pro
-			//when { tag "release-*" }.            
-                  
+			//when { tag "release-*" || tag "HOTFIX*" }.                              
             steps {            		
                 deployOpenShift(ENVIRONMENT_PRO)                                                                     
             }          
