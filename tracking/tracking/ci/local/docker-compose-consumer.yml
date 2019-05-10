@@ -49,6 +49,24 @@ services:
     - docomo.fraudwall
 
 
+  myhbase:
+    image: harisekhon/hbase
+    container_name: myhbase
+    hostname: myhbase
+    ports:
+     - "2181:2181"
+     - "8181:8080"
+     - "8085:8085"
+     - "9090:9090"
+     - "9095:9095"
+     - "6000:16000"
+     - "16020:16010"
+     - "16201:16201"
+     - "16301:16301"
+
+    networks:
+    - docomo.fraudwall
+    
   partner:
     image: "aherreros/microservicesdocomo:partner-0.0.1-SNAPSHOT"  
     #image: "repo-04.dodi.io:5000/partner:0.0.1-SNAPSHOT"
