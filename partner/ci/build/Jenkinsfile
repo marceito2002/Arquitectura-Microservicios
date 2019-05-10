@@ -60,12 +60,12 @@ pipeline {
     environment{
 		
     	ENVIRONMENT_PRE ="PRO"				
-		OPENSHIFT_PROJECT_PRE = "microserviceFraudwall"
+		OPENSHIFT_PROJECT_PRE = "fraudwall"
 		OPENSHIFT_TOKEN_PRE="zusB_vfTH4nUF04T8wK9LARi5SyLQYNRNeUrwIA2Fts"
 		OPENSHIFT_ENPOINT_PRE="https://okd-milrc1.dodi.io:8443"
 
     	ENVIRONMENT_PRO ="PRE"		
-		OPENSHIFT_PROJECT_PRO = "microserviceFraudwall"
+		OPENSHIFT_PROJECT_PRO = "fraudwall"
 		OPENSHIFT_TOKEN_PRO="zusB_vfTH4nUF04T8wK9LARi5SyLQYNRNeUrwIA2Fts"
 		OPENSHIFT_ENPOINT_PRO="https://okd-milrc1.dodi.io:8443"
 
