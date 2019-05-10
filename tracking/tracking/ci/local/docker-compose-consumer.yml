@@ -79,7 +79,7 @@ services:
       - configserver
       - mongodb
     ports:
-      - "9090:8080"
+      - "9191:8080"
     networks:
       - docomo.fraudwall
 
