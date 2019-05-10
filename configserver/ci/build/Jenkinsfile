@@ -34,7 +34,7 @@ def connectOpenShift(env) {
 
 def deployApp() { 
 	//sh "oc new-app aherreros/microservicesdocomo:${artifactID}-${artifactVersion} --name ${artifactID}"
-	sh "oc new-app ${DOCKER_REPOSITORY}/${artifactID}:${artifactVersion} --name ${artifactID}"
+	sh "oc new-app aherreros/microservicesdocomo:${artifactID}-${artifactVersion} --name ${artifactID}"
 	       
 }
 
@@ -115,7 +115,7 @@ pipeline {
         stage('Deploy nexus') {
             steps {            	
                 echo 'Deloying artifact....'
-                sh "mvn deploy -DskipTests -Ddockerfile.username=$DOCKER_USER -Ddockerfile.password=$DOCKER_PASS"                                
+                //sh "mvn deploy -DskipTests -Ddockerfile.username=$DOCKER_USER -Ddockerfile.password=$DOCKER_PASS"                                
             }                        
         }                  
 
